@@ -1,0 +1,526 @@
+﻿================================================================================
+        Jupyter Notebook 的 Python 解释器 —— 终端 / 网页 两种打开方式
+                        通用教程（Windows / macOS / Linux）
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ 目录
+--------------------------------------------------------------------------------
+  第 0 章  先搞清楚概念：你说的"Python 编译器"到底是什么
+  第 1 章  检查并安装环境
+  第 2 章  方式一：在【终端】里打开 Python 解释器
+  第 3 章  方式二：在【网页】里打开 Jupyter（Notebook / Lab）
+  第 4 章  两种方式对照表
+  第 5 章  网页 Notebook 常用操作与快捷键
+  第 6 章  常见报错与解决
+  第 7 章  速查命令表（可打印贴墙）
+
+
+================================================================================
+ 第 0 章  先搞清楚概念：你说的"Python 编译器"到底是什么
+================================================================================
+
+新手常说"打开 Jupyter 的 Python 编译器"，其实涉及三个不同的东西，
+分清楚之后，本教程剩下的内容就非常好懂了：
+
+  (1) Python 解释器 (python.exe)
+      真正执行你代码的程序。严格来说 Python 是"解释型语言"，
+      所以叫"解释器"而不是"编译器"。
+      -> 终端里输入 python 出来的那个 >>> 就是它。
+
+  (2) IPython / Jupyter 内核 (ipykernel)
+      在 Python 解释器外面包了一层，增加了 Tab 补全、语法高亮、
+      富文本输出、魔法命令等能力。
+      -> 终端里输入 ipython 或 jupyter console 出来的那个就是它。
+      -> 网页 Notebook 背后跑的也是它（同一个内核！）。
+
+  (3) Jupyter Notebook / Lab 的网页界面
+      一个跑在本地的小型网站，把"内核"包装成浏览器里的单元格。
+      -> 终端里输入 jupyter notebook 或 jupyter lab，浏览器自动打开。
+
+所以"终端打开"和"网页打开"指的是：
+
+  * 终端方式 -> 在命令行窗口里直接得到一个能敲 Python 代码的交互环境
+                （python / ipython / jupyter console）
+
+  * 网页方式 -> 启动 Jupyter 服务，在浏览器里用单元格写代码
+                （jupyter notebook / jupyter lab）
+
+两种方式可以同时开、互不干扰，用的是同一个 Python 环境。
+
+
+================================================================================
+ 第 1 章  检查并安装环境
+================================================================================
+
+【1.1 检查是否已安装】
+
+打开终端（Windows: Win+R 输入 cmd 或 powershell；macOS: 聚焦搜索"终端"），输入：
+
+    python --version
+
+  看到 "Python 3.x.x" -> 已装好，跳到 1.3。
+
+  提示"不是内部或外部命令"/"command not found" -> 换下面几个再试：
+
+    Windows:      py --version
+    macOS/Linux:  python3 --version
+
+  如果 python3 能用而 python 不能用，本教程后面所有命令里的
+  python 都请替换成 python3（macOS/Linux 默认如此）。
+
+  顺便看一眼 pip 在不在：
+
+    python -m pip --version
+
+
+【1.2 安装 Python（还没装的话）】
+
+  Windows:
+    到 python.org 下载安装包，安装时务必勾选
+    [x] Add Python to PATH   <-- 最容易漏，漏了后面全是"不是内部或外部命令"
+
+  macOS:
+    推荐用 Homebrew:  brew install python
+    或到 python.org 下载
+
+  Linux (Debian/Ubuntu):
+    sudo apt update && sudo apt install python3 python3-pip python3-venv
+
+
+【1.3 安装 Jupyter 相关组件】
+
+最省事的做法（pip 方式，适用于任何系统）：
+
+    python -m pip install --upgrade pip
+    python -m pip install notebook            # 经典 Jupyter Notebook
+    python -m pip install jupyterlab          # 新版 JupyterLab（推荐）
+    python -m pip install ipython             # 终端里的增强解释器
+    python -m pip install jupyter-console     # 终端版的 Jupyter 控制台
+    python -m pip install ipykernel           # Jupyter 的 Python 内核
+
+  一条命令装齐：
+
+    python -m pip install notebook jupyterlab ipython jupyter-console ipykernel
+
+如果你用 Anaconda / Miniconda（conda 方式）：
+
+    conda install -c conda-forge notebook jupyterlab ipython jupyter_console ipykernel
+
+  说明：Anaconda 发行版通常已经自带以上全部，可以跳过安装。
+
+
+【1.4 强烈建议：用虚拟环境隔离项目】
+
+不建虚拟环境也能用，但项目一多必然打架。推荐：
+
+    # 创建
+    python -m venv myenv
+
+    # 激活
+    Windows (cmd):         myenv\Scripts\activate.bat
+    Windows (PowerShell):  myenv\Scripts\Activate.ps1
+    macOS / Linux:         source myenv/bin/activate
+
+    # 激活后命令行前面会出现 (myenv)，此时再装 Jupyter
+    python -m pip install notebook ipykernel
+
+    # 退出
+    deactivate
+
+  PowerShell 若报"禁止运行脚本"，先执行一次：
+    Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+
+
+================================================================================
+ 第 2 章  方式一：在【终端】里打开 Python 解释器
+================================================================================
+
+以下 4 种任选，按"从简单到强大"排列。
+
+
+【2.1 最基础：Python 原生交互解释器 REPL】
+
+    python          (Windows 也可以直接敲 py)
+    python3         (macOS / Linux)
+
+看到提示符 >>> 就成功了，直接敲代码：
+
+    >>> 1 + 1
+    2
+    >>> print("hello")
+    hello
+
+退出：
+    >>> exit()
+  或  Ctrl + Z 然后回车      (Windows)
+  或  Ctrl + D              (macOS / Linux)
+
+特点：系统自带、最快、无任何依赖；但没有 Tab 补全和高亮，写长代码很难受。
+
+
+【2.2 好用得多：IPython】
+
+    ipython
+
+会看到彩色高亮的 In [1]: 提示符。核心优势：
+
+  * Tab 补全        输入 pri<Tab> 自动补全
+  * 查看帮助        在任意对象后加 ?   例如  print?
+                    加 ?? 看源码      print??
+  * 执行系统命令    前面加 !          !dir  或  !ls -l
+  * 魔法命令        以 % 开头          %timeit sum(range(1000))
+  * 查看历史        历史变量 _, __, _i, _ih
+
+退出：exit  或  Ctrl + D
+
+
+【2.3 最贴切"Jupyter 的 Python 编译器"：jupyter console】
+
+    jupyter console
+
+这个才是严格意义上"在终端里跑 Jupyter 内核"——和你网页 Notebook
+用的是同一个 ipykernel，所以行为几乎完全一致。
+
+    # 指定内核（装了多个 Python 环境时用）
+    jupyter console --kernel python3
+
+    # 查看本机有哪些内核
+    jupyter kernelspec list
+
+退出：exit  或  Ctrl + D
+
+
+【2.4 独立窗口版：jupyter qtconsole】
+
+    jupyter qtconsole
+
+图形界面的控制台，支持内嵌图片、语法高亮、多标签，
+比纯终端舒服。需要 PyQt 等图形库，装不上就不用管它：
+
+    python -m pip install qtconsole pyqt5
+
+
+【2.5 不进交互模式，直接跑代码（附赠）】
+
+    python script.py                    # 运行脚本文件
+    python -c "print(1 + 1)"            # 运行单行代码
+    python -i script.py                 # 跑完脚本后留在交互模式里
+    python -m pdb script.py             # 带调试器启动
+    jupyter execute notebook.ipynb      # 命令行执行整个 notebook（需 nbclient）
+
+
+================================================================================
+ 第 3 章  方式二：在【网页】里打开 Jupyter（Notebook / Lab）
+================================================================================
+
+总共就两步：终端敲一条启动命令 -> 浏览器里写代码。
+
+
+【3.1 启动服务】
+
+在终端里进入你想存放笔记本的目录，然后执行：
+
+    jupyter notebook          # 经典界面，更轻量
+
+或
+
+    jupyter lab               # 新版界面，功能更强（推荐）
+
+如果系统提示找不到 jupyter 命令，用这个万能写法（一定能成）：
+
+    python -m jupyter notebook
+    python -m jupyter lab
+
+正常情况下会自动弹出浏览器，地址类似：
+
+    http://localhost:8888/tree          (notebook)
+    http://localhost:8888/lab           (lab)
+
+并且终端里会打印一行带 token 的完整地址，长这样：
+
+    http://127.0.0.1:8888/?token=3f2a9c8e1b7d4a6f...
+
+
+【3.2 浏览器没有自动打开怎么办】
+
+  方法 A：手动把终端里那整行 http://127.0.0.1:8888/?token=xxxx
+          复制粘贴到浏览器地址栏（token 一定要带上，否则会要求登录）。
+
+  方法 B：先启动时加参数禁止自动打开，再自己开：
+
+          jupyter notebook --no-browser
+
+          然后手动访问 http://localhost:8888
+
+  方法 C：如果提示要 Password or token，回到启动 Jupyter 的那个终端窗口，
+          从输出里把 token= 后面那一串复制出来贴进去。
+
+  方法 D：设置一个固定密码（设了就不用每次翻 token）：
+
+          jupyter notebook password
+          按提示输入两遍密码，之后登录就用这个密码。
+
+
+【3.3 在网页里新建一个"Python 编译器"】
+
+  经典 Notebook 界面：
+    右上角 [New] / [新建]  ->  选择 [Python 3 (ipykernel)]
+    （新版界面是左上角 [+ ] 或 Launcher 页里的 Notebook 图标）
+
+  于是出现一个空白笔记本，里面有一个"单元格"（cell）。
+  在单元格里输入：
+
+    print("Hello, Jupyter!")
+
+  按 Shift + Enter 运行，下方立刻出现输出：
+
+    Hello, Jupyter!
+
+  这个"单元格 + 内核"的组合，就是大家口中的
+  "网页版 Python 编译器"。
+
+
+【3.4 网页里切换 / 安装 Python 内核】
+
+装了多个 Python 环境（比如虚拟环境、conda 环境）时，需要把环境注册成内核：
+
+    # 先激活目标环境，再执行（myenv 是内核标识，可自定义）
+    python -m ipykernel install --user --name myenv --display-name "Python (myenv)"
+
+网页里切换：菜单 Kernel -> Change Kernel（内核 -> 更改内核）-> 选目标。
+查看已注册内核：jupyter kernelspec list
+
+重要提醒：网页里 import 某个包报"找不到"，九成是"内核选错了"。
+在单元格里跑这句，就能看到当前到底用的哪个 Python：
+
+    import sys; print(sys.executable)
+
+
+【3.5 常用的启动参数】
+
+    jupyter notebook --port 8889                     指定端口（8888 被占用时）
+    jupyter notebook --no-browser                    不自动开浏览器
+    jupyter notebook --notebook-dir="E:\我的项目"      指定工作根目录
+    jupyter notebook --ip 0.0.0.0                    允许局域网其他设备访问
+    jupyter notebook --generate-config               生成配置文件（永久改设置）
+    jupyter lab --port 8890                          同理适用于 lab
+
+  安全警告：--ip 0.0.0.0 会让同一网络下的人都能访问你的文件，
+  务必配合 jupyter notebook password 设密码，用完就关。
+
+
+【3.6 关闭服务】
+
+  终端方式：回到启动 Jupyter 的那个终端窗口，按 Ctrl + C，
+            提示 "Shut down this notebook server (y/[n])?" 时输入 y 回车。
+
+  网页方式：File -> Close and Halt
+            （关闭当前笔记本并停止它占用的内核，但服务还在跑）
+
+  另外，网页右上角 [Quit] / [Shut Down] 可以停掉整个服务。
+
+
+================================================================================
+ 第 4 章  两种方式对照表
+================================================================================
+
+  对比项          终端方式                          网页方式
+  --------------  --------------------------------  --------------------------------
+  启动命令        python / ipython / jupyter console jupyter notebook / jupyter lab
+  界面            黑色命令行窗口                    浏览器页面
+  使用方式        一行一行敲，回车即执行            在单元格里写，Shift+Enter 运行
+  画图/图片       需另存文件或用 qtconsole 内嵌     直接显示在单元格下方
+  保存代码        靠手动复制，或用 %save / %hist   自动保存为 .ipynb 文件
+  适合场景        快速试算、调试、临时验证一行代码  写报告、做数据分析、教学、留档
+  是否需浏览器    不需要                            需要（本机浏览器即可）
+  背后内核        相同（都是 Python / ipykernel）   相同
+  推荐指数        调试首选                         日常主力
+
+
+================================================================================
+ 第 5 章  网页 Notebook 常用操作与快捷键
+================================================================================
+
+【5.1 两种模式】
+
+  编辑模式（边框绿色）—— 可以打字写代码。按 Enter 进入。
+  命令模式（边框蓝色）—— 快捷键操作单元格。按 Esc 进入。
+
+  很多新手觉得"快捷键没反应"，就是因为没注意当前在哪个模式。
+
+
+【5.2 运行类】
+
+  Shift + Enter   运行当前单元格，并跳到下一个（没有就新建一个）★最常用
+  Ctrl  + Enter   运行当前单元格，光标留在原地
+  Alt   + Enter   运行当前单元格，并在下方插入一个新的
+
+
+【5.3 命令模式下（先按 Esc）】
+
+  A          在上方插入新单元格
+  B          在下方插入新单元格
+  D D        删除当前单元格（连按两次 D）
+  Z          撤销单元格删除
+  M          把单元格切换成 Markdown（写文档用）
+  Y          把单元格切换回 Code（写代码用）
+  R          切换成 Raw
+  ↑ / ↓      选中上/下一个单元格
+  C / V      复制 / 粘贴单元格
+  X          剪切单元格
+  Shift+↑/↓  多选单元格
+  Ctrl+Shift+ -  从光标处拆分单元格
+  F          查找替换
+  H          查看全部快捷键
+
+【5.4 编辑模式下】
+
+  Tab            代码补全
+  Shift + Tab    查看函数参数签名 / 提示（连按可展开）
+  Ctrl + /       注释 / 取消注释选中行
+  Ctrl + ] / [   缩进 / 取消缩进
+  Ctrl + Z       撤销
+  Ctrl + A       全选
+
+
+【5.5 一个典型的工作流】
+
+  1) 终端: cd 到项目目录
+  2) 终端: jupyter lab
+  3) 浏览器自动打开 -> 点 Notebook -> 选 Python 3 内核
+  4) 单元格敲: import pandas as pd
+  5) Shift+Enter 运行
+  6) 敲完所有代码后 Ctrl+S 保存（.ipynb 文件）
+  7) 完事: 关浏览器 -> 终端 Ctrl+C 停服务
+
+
+================================================================================
+ 第 6 章  常见报错与解决
+================================================================================
+
+[1] 'jupyter' 不是内部或外部命令，也不是可运行的程序
+    'jupyter' is not recognized as an internal or external command
+  原因：jupyter.exe 不在系统 PATH 里，或根本没装。
+  解决：
+    a) 用模块方式启动，绕开 PATH 问题：
+           python -m jupyter notebook
+    b) 确认真的装了：
+           python -m pip install notebook jupyterlab
+    c) 把 Python 的 Scripts 目录加进 PATH，例如：
+           C:\Users\你的用户名\AppData\Local\Programs\Python\Python312\Scripts
+    d) Anaconda 用户请用"Anaconda Prompt"而不是普通 cmd。
+
+[2] 'python' 不是内部或外部命令
+  原因：安装 Python 时没勾 Add Python to PATH。
+  解决：
+    a) 先试 py（Windows 的 Python 启动器）：  py -m jupyter notebook
+    b) 试 python3（macOS / Linux）
+    c) 重装 Python 并勾选 Add Python to PATH（最彻底）
+
+[3] OSError: [Errno 98] Address already in use  /  端口被占用
+  原因：8888 端口已被别的程序（或另一个 Jupyter）占用。
+  解决：换端口
+           jupyter notebook --port 8889
+  查占用者（Windows）：netstat -ano | findstr 8888
+  查占用者（macOS/Linux）：lsof -i :8888
+
+[4] 浏览器没自动弹出
+  解决：手动复制终端里 http://127.0.0.1:8888/?token=... 到浏览器。
+        注意别漏掉 token，否则会跳到登录页。
+
+[5] 要求输入 Password or token
+  原因：没带 token 访问，或之前设过密码。
+  解决：从启动 Jupyter 的终端输出里复制 token=后面那串；
+        或执行 jupyter notebook password 重设密码。
+
+[6] ModuleNotFoundError: No module named 'xxx'
+  原因：99% 是"内核选错环境了"，不是包没装。
+  排查（在单元格里跑）：
+           import sys; print(sys.executable)
+        对比你在终端里 pip install 的那个 Python 路径是否一致。
+  解决：
+    a) 在正确的环境里装包：python -m pip install xxx
+    b) 把该环境注册成内核：
+           python -m ipykernel install --user --name 环境名 --display-name "显示名"
+    c) 网页里 Kernel -> Change Kernel 切过去。
+    d) 注意：装完包如果内核还开着，要 Restart Kernel 才生效。
+
+[7] 内核一直显示 "Kernel Connecting" / 连不上、频繁死掉
+  解决：
+    a) 菜单 Kernel -> Restart Kernel 重启内核
+    b) 直接在终端跑 python -m ipykernel install --user 重装内核
+    c) 关掉全部 Jupyter，重新启动服务
+    d) Windows 上杀残留进程：taskkill /F /IM python.exe （谨慎，会杀掉所有 Python 进程）
+
+[8] Windows 终端里中文显示乱码
+  解决：先执行 chcp 65001 切换成 UTF-8，或改用 Windows Terminal。
+
+[9] 网页里画的图不显示
+  解决：在单元格开头加 %matplotlib inline
+        （新版 ipykernel 通常默认内联，无需再加）
+
+[10] 笔记本打开是空白 / 加载不出来
+  解决：强制刷新 Ctrl+F5；仍不行就重启 Jupyter 服务。
+
+[11] pip 安装慢或超时
+  解决：换国内镜像源
+        python -m pip install notebook -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+[12] 关不掉服务，Ctrl+C 没反应
+  解决：多按几次，或关掉整个终端窗口。
+        也可以在网页右上角点 Quit。
+
+
+================================================================================
+ 第 7 章  速查命令表（可打印贴墙）
+================================================================================
+
+【安装】
+  python -m pip install notebook jupyterlab ipython jupyter-console ipykernel
+
+【终端方式打开解释器】
+  python                          # 最基础的 Python 交互解释器
+  py                              # Windows 专用启动器
+  ipython                         # 增强交互解释器（Tab 补全、魔法命令）
+  jupyter console                 # 终端里跑真正的 Jupyter 内核 ★
+  jupyter qtconsole               # 图形窗口版控制台
+  python -m jupyter console       # 找不到 jupyter 命令时的万能写法
+
+【网页方式打开】
+  jupyter notebook                # 经典网页版
+  jupyter lab                     # 新版网页版（推荐）
+  python -m jupyter notebook      # 万能写法
+  jupyter notebook --no-browser   # 不自动开浏览器
+  jupyter notebook --port 8889    # 指定端口
+  jupyter notebook password       # 设置登录密码
+
+【内核管理】
+  jupyter kernelspec list                              # 查看已注册内核
+  python -m ipykernel install --user --name 名 --display-name "显示名"   # 注册内核
+
+【网页地址】
+  http://localhost:8888/tree      # Notebook 经典界面
+  http://localhost:8888/lab       # Lab 界面
+
+【退出】
+  解释器/控制台:  exit  或  Ctrl+D
+  Jupyter 服务:   终端里 Ctrl+C，再按 y 回车
+  网页:           File -> Close and Halt（关笔记本）/ Quit（停服务）
+
+【排错三连】
+  python --version                # Python 装没装
+  python -m pip list              # 包装没装
+  import sys; print(sys.executable)   # 当前内核用的是哪个 Python ★
+
+【最推荐的两条组合】
+
+  想快速算一下、调一段代码  ->   终端敲:   ipython
+  想正经写分析、留档、画图  ->   终端敲:   jupyter lab
+                                 浏览器里: New Notebook -> Python 3
+
+================================================================================
+ 教程结束。遇到本教程没覆盖的报错，优先看终端里那段红字/堆栈的
+ 最后一行，那通常就是真正的原因。
+================================================================================
